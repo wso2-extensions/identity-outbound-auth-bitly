@@ -265,4 +265,3 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
         return claims;
     }
 }
-

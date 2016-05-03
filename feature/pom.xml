@@ -27,6 +27,7 @@
 
     <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
     <artifactId>org.wso2.carbon.extension.identity.authenticator.bitly.feature</artifactId>
+    <version>1.0.0-SNPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - identity bitly OTP Feature</name>
     <url>http://wso2.org</url>

@@ -30,6 +30,9 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Set accept header OAuth request
+ */
 public class BitlyOAuthClient extends OAuthClient {
 
     public BitlyOAuthClient(HttpClient oauthClient) {

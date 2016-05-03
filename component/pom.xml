@@ -25,7 +25,7 @@
         <version>1.0.0</version>
     </parent>
     <artifactId>org.wso2.carbon.extension.identity.authenticator.bitly.connector</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Authenticator Library For Bitly</name>
     <url>http://wso2.org</url>
