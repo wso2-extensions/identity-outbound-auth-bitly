@@ -114,7 +114,6 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
      */
     @Override
     protected String getScope(String scope, Map<String, String> authenticatorProperties) {
-
         return "";
     }
 
