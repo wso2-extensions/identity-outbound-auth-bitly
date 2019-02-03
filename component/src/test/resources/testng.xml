@@ -19,7 +19,7 @@
 
 <suite name="Suite1" verbose="1" >
 
-    <test name="Reddit-Authenticator-Unit-Tests">
+    <test name="bitly-Authenticator-Unit-Tests">
         <classes>
             <class name="org.wso2.carbon.identity.authenticator.bitly.BitlyTest"/>
             <class name="org.wso2.carbon.identity.authenticator.bitly.BitltTestClass2"/>
