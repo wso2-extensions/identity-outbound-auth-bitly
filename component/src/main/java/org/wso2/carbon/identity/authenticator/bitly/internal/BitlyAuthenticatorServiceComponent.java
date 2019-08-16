@@ -32,7 +32,7 @@ import java.util.Hashtable;
  */
 public class BitlyAuthenticatorServiceComponent {
 
-    private static Log log = LogFactory.getLog(BitlyAuthenticatorServiceComponent.class);
+    private static final Log log = LogFactory.getLog(BitlyAuthenticatorServiceComponent.class);
 
     protected void activate(ComponentContext ctxt) {
         try {

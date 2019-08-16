@@ -55,7 +55,7 @@ import java.util.Map;
  */
 public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements FederatedApplicationAuthenticator {
 
-    private static Log log = LogFactory.getLog(BitlyAuthenticator.class);
+    private static final Log log = LogFactory.getLog(BitlyAuthenticator.class);
 
     /**
      * Get bitly authorization endpoint.
