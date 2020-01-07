@@ -87,7 +87,7 @@ public class BitltTestClass2 {
         Map<String, String> authenticatorProperties = new HashMap<>();
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_ID, "test-client-id");
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_SECRET, "test-client-secret");
-        authenticatorProperties.put("callbackUrl", "http://localhost:9443/commonauth");
+        authenticatorProperties.put(BitlyAuthenticatorConstants.CALLBACK_URL, "http://localhost:9443/commonauth");
         return new Object[][]{{authenticatorProperties}};
     }
 
@@ -120,7 +120,7 @@ public class BitltTestClass2 {
     @Test(description = "Test case for getSubjectAttributes", dataProvider = "getAuthenticatorPropertiesData")
     public void testGetSubjectAttributes(Map<String, String> authenticatorProperties) throws Exception {
         Map<ClaimMapping, String> claims = Whitebox.invokeMethod(bitlyAuthenticator,
-                "getSubjectAttributes", oAuthClientResponse,
+                BitlyAuthenticatorConstants.GET_SUBJECT_ATTRIBUTES, oAuthClientResponse,
                 authenticatorProperties);
         Assert.assertEquals(0, claims.size());
     }

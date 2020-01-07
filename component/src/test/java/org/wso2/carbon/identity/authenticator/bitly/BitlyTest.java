@@ -63,9 +63,10 @@ public class BitlyTest {
         Map<String, String> authenticatorProperties = new HashMap<>();
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_ID, "test-client-id");
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_SECRET, "test-client-secret");
-        authenticatorProperties.put("callbackUrl", "http://localhost:9443/commonauth");
-        authenticatorProperties.put("tokenEndpoint", "https://api-ssl.bitly.com/oauth/access_token");
-        authenticatorProperties.put("code", "dummy-code");
+        authenticatorProperties.put(BitlyAuthenticatorConstants.CALLBACK_URL, "http://localhost:9443/commonauth");
+        authenticatorProperties.put(BitlyAuthenticatorConstants.TOKEN_ENDPOINT,
+                "https://api-ssl.bitly.com/oauth/access_token");
+        authenticatorProperties.put(BitlyAuthenticatorConstants.CODE, "dummy-code");
         return new Object[][]{{authenticatorProperties}};
     }
 
@@ -84,18 +85,22 @@ public class BitlyTest {
 
     @Test(description = "Test case for getAccessRequest", dataProvider = "authenticatorProperties")
     public void testGetAccessRequest(Map<String, String> authenticatorProperties) throws Exception {
-        OAuthClientRequest accessRequest = Whitebox.invokeMethod(bitlyAuthenticator, "getAccessRequest",
-                authenticatorProperties.get("tokenEndpoint"), authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_ID),
-                authenticatorProperties.get("code"), authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_SECRET),
-                authenticatorProperties.get("callbackUrl"));
-        Whitebox.invokeMethod(bitlyAuthenticator, "getOauthResponse", mockOAuthClient, mockOAuthClientRequest);
+        OAuthClientRequest accessRequest = Whitebox.invokeMethod(bitlyAuthenticator,
+                BitlyAuthenticatorConstants.GET_ACCESS_REQUEST,
+                authenticatorProperties.get(BitlyAuthenticatorConstants.TOKEN_ENDPOINT),
+                authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_ID),
+                authenticatorProperties.get(BitlyAuthenticatorConstants.CODE),
+                authenticatorProperties.get(OIDCAuthenticatorConstants.CLIENT_SECRET),
+                authenticatorProperties.get(BitlyAuthenticatorConstants.CALLBACK_URL));
+        Whitebox.invokeMethod(bitlyAuthenticator, BitlyAuthenticatorConstants.GET_OAUTH_RESPONSE,
+                mockOAuthClient, mockOAuthClientRequest);
         Assert.assertNotNull(accessRequest);
     }
 
     @Test(description = "Test case for GetName")
     public void testGetName() {
         String name = bitlyAuthenticator.getName();
-        Assert.assertEquals("bitly", name);
+        Assert.assertEquals(BitlyAuthenticatorConstants.AUTHENTICATOR_NAME, name);
     }
 
     @Test(description = "Test case for GetFriendlyName")
@@ -124,10 +129,9 @@ public class BitlyTest {
     @Test(description = "Test case for getSubjectAttributes", dataProvider = "authenticatorProperties")
     public void testGetSubjectAttributes(Map<String, String> authenticatorProperties) throws Exception {
         OAuthClientResponse oAuthClientResponse = Whitebox.invokeMethod(bitlyAuthenticator,
-                "getOauthResponse", mockOAuthClient, mockOAuthClientRequest);
+                BitlyAuthenticatorConstants.GET_OAUTH_RESPONSE, mockOAuthClient, mockOAuthClientRequest);
         Map<ClaimMapping, String> claims = Whitebox.invokeMethod(bitlyAuthenticator,
-                "getSubjectAttributes", oAuthClientResponse,
-                authenticatorProperties);
+                BitlyAuthenticatorConstants.GET_SUBJECT_ATTRIBUTES, oAuthClientResponse, authenticatorProperties);
         Assert.assertEquals(0, claims.size());
     }
 }
