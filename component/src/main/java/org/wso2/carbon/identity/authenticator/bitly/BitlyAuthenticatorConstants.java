@@ -32,5 +32,11 @@ public class BitlyAuthenticatorConstants {
     public static final String ACCEPT_HEADER = "Accept";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String USER_DATA = "data";
+    public static final String CALLBACK_URL = "callbackUrl";
+    public static final String TOKEN_ENDPOINT = "tokenEndpoint";
+    public static final String CODE = "code";
+    public static final String GET_OAUTH_RESPONSE = "getOauthResponse";
+    public static final String GET_SUBJECT_ATTRIBUTES = "getSubjectAttributes";
+    public static final String GET_ACCESS_REQUEST = "getAccessRequest";
 
 }

@@ -1,3 +1,22 @@
+/*
+ *  Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+
 package org.wso2.carbon.identity.authenticator.bitly;
 
 import static org.mockito.Matchers.anyString;
@@ -68,7 +87,7 @@ public class BitltTestClass2 {
         Map<String, String> authenticatorProperties = new HashMap<>();
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_ID, "test-client-id");
         authenticatorProperties.put(OIDCAuthenticatorConstants.CLIENT_SECRET, "test-client-secret");
-        authenticatorProperties.put("callbackUrl", "http://localhost:9443/commonauth");
+        authenticatorProperties.put(BitlyAuthenticatorConstants.CALLBACK_URL, "http://localhost:9443/commonauth");
         return new Object[][]{{authenticatorProperties}};
     }
 
@@ -101,7 +120,7 @@ public class BitltTestClass2 {
     @Test(description = "Test case for getSubjectAttributes", dataProvider = "getAuthenticatorPropertiesData")
     public void testGetSubjectAttributes(Map<String, String> authenticatorProperties) throws Exception {
         Map<ClaimMapping, String> claims = Whitebox.invokeMethod(bitlyAuthenticator,
-                "getSubjectAttributes", oAuthClientResponse,
+                BitlyAuthenticatorConstants.GET_SUBJECT_ATTRIBUTES, oAuthClientResponse,
                 authenticatorProperties);
         Assert.assertEquals(0, claims.size());
     }
