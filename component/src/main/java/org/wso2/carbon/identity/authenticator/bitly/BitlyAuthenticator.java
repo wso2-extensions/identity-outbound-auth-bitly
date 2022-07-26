@@ -31,7 +31,6 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.utils.JSONUtils;
-import org.json.JSONObject;
 import org.wso2.carbon.identity.application.authentication.framework.FederatedApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
@@ -276,11 +275,12 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
 
     @Override
     protected String sendRequest(String url, String accessToken) throws IOException {
+
         if (log.isDebugEnabled()) {
-            log.debug("Claim URL: " + url);
+            log.debug("Bitly user info URL: " + url);
         }
 
-        if (url == null) {
+        if (StringUtils.isBlank(url)) {
             return StringUtils.EMPTY;
         }
 
@@ -306,8 +306,8 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
             }
         }
 
-        if (log.isDebugEnabled() && IdentityUtil.isTokenLoggable(IdentityConstants.IdentityTokens.USER_ID_TOKEN)) {
-            log.debug("response: " + builder.toString());
+        if (log.isDebugEnabled() && IdentityUtil.isTokenLoggable(IdentityConstants.IdentityTokens.USER_CLAIMS)) {
+            log.debug("Bitly user info response: " + builder);
         }
         return builder.toString();
     }
