@@ -28,7 +28,7 @@ public class BitlyAuthenticatorConstants {
     //bitly token  endpoint URL
     public static final String BITLY_TOKEN_ENDPOINT = "https://api-ssl.bitly.com/oauth/access_token";
     //bitly user info endpoint URL
-    public static final String BITLY_USERINFO_ENDPOINT = "https://api-ssl.bitly.com/v3/user/info";
+    public static final String BITLY_USERINFO_ENDPOINT = "https://api-ssl.bitly.com/v4/user";
     public static final String ACCEPT_HEADER = "Accept";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String USER_DATA = "data";
@@ -38,5 +38,9 @@ public class BitlyAuthenticatorConstants {
     public static final String GET_OAUTH_RESPONSE = "getOauthResponse";
     public static final String GET_SUBJECT_ATTRIBUTES = "getSubjectAttributes";
     public static final String GET_ACCESS_REQUEST = "getAccessRequest";
+    public static final String APPLICATION_JSON_HEADER =  "application/json";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_HEADER = "Bearer";
+    public static final String GET_METHOD = "GET";
 
 }

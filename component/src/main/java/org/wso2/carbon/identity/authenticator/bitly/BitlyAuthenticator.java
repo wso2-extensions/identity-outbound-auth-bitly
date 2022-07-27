@@ -31,7 +31,6 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.utils.JSONUtils;
-import org.json.JSONObject;
 import org.wso2.carbon.identity.application.authentication.framework.FederatedApplicationAuthenticator;
 import org.wso2.carbon.identity.application.authentication.framework.context.AuthenticationContext;
 import org.wso2.carbon.identity.application.authentication.framework.exception.AuthenticationFailedException;
@@ -41,14 +40,27 @@ import org.wso2.carbon.identity.application.authenticator.oidc.OpenIDConnectAuth
 import org.wso2.carbon.identity.application.common.model.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.application.common.util.IdentityApplicationConstants;
+import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.carbon.identity.authenticator.bitly.BitlyAuthenticatorConstants.ACCEPT_HEADER;
+import static org.wso2.carbon.identity.authenticator.bitly.BitlyAuthenticatorConstants.APPLICATION_JSON_HEADER;
+import static org.wso2.carbon.identity.authenticator.bitly.BitlyAuthenticatorConstants.AUTHORIZATION_HEADER;
+import static org.wso2.carbon.identity.authenticator.bitly.BitlyAuthenticatorConstants.BEARER_HEADER;
+import static org.wso2.carbon.identity.authenticator.bitly.BitlyAuthenticatorConstants.GET_METHOD;
 
 /**
  * Authenticator of bitly
@@ -240,14 +252,11 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
         Map<ClaimMapping, String> claims = new HashMap<>();
         try {
             String accessToken = token.getParam(BitlyAuthenticatorConstants.ACCESS_TOKEN);
-            String url = this.getUserInfoEndpoint(token, authenticatorProperties);
-            String userInfoUrl = url + "?access_token=" + accessToken;
-            String json = sendRequest(userInfoUrl, accessToken);
-            if (StringUtils.isBlank(json)) {
+            String userInfoUrl = this.getUserInfoEndpoint(token, authenticatorProperties);
+            String userData = sendRequest(userInfoUrl, accessToken);
+            if (StringUtils.isBlank(userData)) {
                 throw new AuthenticationFailedException("Unable to fetch user claims. Proceeding without user claims");
             }
-            JSONObject obj = new JSONObject(json);
-            String userData = obj.getJSONObject(BitlyAuthenticatorConstants.USER_DATA).toString();
             Map jsonObject = JSONUtils.parseJSON(userData);
             for (Object o : jsonObject.entrySet()) {
                 Map.Entry data = (Map.Entry) o;
@@ -262,5 +271,44 @@ public class BitlyAuthenticator extends OpenIDConnectAuthenticator implements Fe
             log.error("Error occurred while accessing user info endpoint", e);
         }
         return claims;
+    }
+
+    @Override
+    protected String sendRequest(String url, String accessToken) throws IOException {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Bitly user info URL: " + url);
+        }
+
+        if (StringUtils.isBlank(url)) {
+            return StringUtils.EMPTY;
+        }
+
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = null;
+
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection urlConnection = (HttpURLConnection) obj.openConnection();
+            urlConnection.setRequestMethod(GET_METHOD);
+            urlConnection.setRequestProperty(AUTHORIZATION_HEADER, BEARER_HEADER + " " + accessToken);
+            urlConnection.setRequestProperty(ACCEPT_HEADER, APPLICATION_JSON_HEADER);
+            reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            String inputLine = reader.readLine();
+
+            while (inputLine != null) {
+                builder.append(inputLine).append("\n");
+                inputLine = reader.readLine();
+            }
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+
+        if (log.isDebugEnabled() && IdentityUtil.isTokenLoggable(IdentityConstants.IdentityTokens.USER_CLAIMS)) {
+            log.debug("Bitly user info response: " + builder);
+        }
+        return builder.toString();
     }
 }
